@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package comprehension; 
+
+service FileService {
+  rpc SubmitFile(Submission) returns (Response) {}
+}
+
+message Submission {
+  string submission_id = 1;
+  string language = 2;
+  repeated string code = 3;
+}
+
+message Response {
+  bool received = 1;
+}
