@@ -3,15 +3,12 @@ syntax = "proto3";
 package comprehension; 
 
 
-service FileService {
-  rpc SubmitFile(Submission) returns (Response) {}
+message DataChunk {
+  bytes data = 1;
 }
 
-message Submission {
-  string submission_id = 1;
-  string variant_id = 2;
-  string language = 3;
-  repeated string code = 4;
+service fileService {
+  rpc DownloadProductImage(stream DataChunk) returns (Response);
 }
 
 message Response {
