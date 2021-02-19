@@ -8,7 +8,7 @@ message DataChunk {
 }
 
 service fileService {
-  rpc DownloadProductImage(stream DataChunk) returns (Response);
+  rpc DownloadProductImage(DataChunk) returns (Response);
 }
 
 message Response {
