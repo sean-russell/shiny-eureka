@@ -2,14 +2,16 @@ syntax = "proto3";
 
 package comprehension; 
 
+
 service FileService {
   rpc SubmitFile(Submission) returns (Response) {}
 }
 
 message Submission {
   string submission_id = 1;
-  string language = 2;
-  repeated string code = 3;
+  string variant_id = 2;
+  string language = 3;
+  repeated string code = 4;
 }
 
 message Response {
