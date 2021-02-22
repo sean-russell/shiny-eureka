@@ -3,14 +3,71 @@ syntax = "proto3";
 package comprehension; 
 
 
-message DataChunk {
+message BasicCodeFile {
   bytes data = 1;
 }
 
-service fileService {
-  rpc DownloadProductImage(DataChunk) returns (Response);
+message SubmittedCodeFile {
+  bytes data = 1;
+  string submission_id = 2;
+}
+
+message VariantCodeFile{
+  bytes data = 1;
+  string submission_id = 2;
+  string variant_id = 3;
+}
+
+message VariableDetail{
+  string name = 1;
+  string type = 2;
+  string value = 3;
+}
+
+message SingleCalculation{
+  int32 order = 1;
+  string explanation = 2;
+  string code = 3;
+  string result = 4;
+  string type = 5;
+}
+
+message MultiCalculation{
+  string line_number = 1;
+  string explanation = 2;
+  string code = 3;
+  string result = 4;
+  string type = 5;
+  repeated VariableDetail vars = 6;
+  string next_line = 7;
+}
+
+message SingleLineQuestion{
+  string current_line = 1;
+  string next_line = 2;
+  repeated VariableDetail vars_before = 3;
+  repeated SingleCalculation calculations = 4;
+  repeated VariableDetail vars_after = 5; 
+}
+
+service FileService {
+  rpc SubmitCodeFile(BasicCodeFile) returns (Response);
+}
+
+service VariantService {
+  rpc GenerateVariants(SubmittedCodeFile) returns (Response);
+}
+
+service ASTService {
+  rpc GenerateAST(VariantCodeFile) returns (Response);
+}
+
+service ImageService {
+  rpc GenerateImage(VariantCodeFile) returns (Response);
 }
 
 message Response {
   bool received = 1;
+  string submission_id = 2;
+  repeated string variant_id = 3;
 }

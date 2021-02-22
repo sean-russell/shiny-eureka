@@ -42,7 +42,7 @@ func NewFileServiceEndpoints() []*api.Endpoint {
 // Client API for FileService service
 
 type FileService interface {
-	DownloadProductImage(ctx context.Context, in *DataChunk, opts ...client.CallOption) (*Response, error)
+	SubmitCodeFile(ctx context.Context, in *BasicCodeFile, opts ...client.CallOption) (*Response, error)
 }
 
 type fileService struct {
@@ -57,8 +57,8 @@ func NewFileService(name string, c client.Client) FileService {
 	}
 }
 
-func (c *fileService) DownloadProductImage(ctx context.Context, in *DataChunk, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "FileService.DownloadProductImage", in)
+func (c *fileService) SubmitCodeFile(ctx context.Context, in *BasicCodeFile, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "FileService.SubmitCodeFile", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -70,12 +70,12 @@ func (c *fileService) DownloadProductImage(ctx context.Context, in *DataChunk, o
 // Server API for FileService service
 
 type FileServiceHandler interface {
-	DownloadProductImage(context.Context, *DataChunk, *Response) error
+	SubmitCodeFile(context.Context, *BasicCodeFile, *Response) error
 }
 
 func RegisterFileServiceHandler(s server.Server, hdlr FileServiceHandler, opts ...server.HandlerOption) error {
 	type fileService interface {
-		DownloadProductImage(ctx context.Context, in *DataChunk, out *Response) error
+		SubmitCodeFile(ctx context.Context, in *BasicCodeFile, out *Response) error
 	}
 	type FileService struct {
 		fileService
@@ -88,6 +88,183 @@ type fileServiceHandler struct {
 	FileServiceHandler
 }
 
-func (h *fileServiceHandler) DownloadProductImage(ctx context.Context, in *DataChunk, out *Response) error {
-	return h.FileServiceHandler.DownloadProductImage(ctx, in, out)
+func (h *fileServiceHandler) SubmitCodeFile(ctx context.Context, in *BasicCodeFile, out *Response) error {
+	return h.FileServiceHandler.SubmitCodeFile(ctx, in, out)
+}
+
+// Api Endpoints for VariantService service
+
+func NewVariantServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
+
+// Client API for VariantService service
+
+type VariantService interface {
+	GenerateVariants(ctx context.Context, in *SubmittedCodeFile, opts ...client.CallOption) (*Response, error)
+}
+
+type variantService struct {
+	c    client.Client
+	name string
+}
+
+func NewVariantService(name string, c client.Client) VariantService {
+	return &variantService{
+		c:    c,
+		name: name,
+	}
+}
+
+func (c *variantService) GenerateVariants(ctx context.Context, in *SubmittedCodeFile, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "VariantService.GenerateVariants", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for VariantService service
+
+type VariantServiceHandler interface {
+	GenerateVariants(context.Context, *SubmittedCodeFile, *Response) error
+}
+
+func RegisterVariantServiceHandler(s server.Server, hdlr VariantServiceHandler, opts ...server.HandlerOption) error {
+	type variantService interface {
+		GenerateVariants(ctx context.Context, in *SubmittedCodeFile, out *Response) error
+	}
+	type VariantService struct {
+		variantService
+	}
+	h := &variantServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&VariantService{h}, opts...))
+}
+
+type variantServiceHandler struct {
+	VariantServiceHandler
+}
+
+func (h *variantServiceHandler) GenerateVariants(ctx context.Context, in *SubmittedCodeFile, out *Response) error {
+	return h.VariantServiceHandler.GenerateVariants(ctx, in, out)
+}
+
+// Api Endpoints for ASTService service
+
+func NewASTServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
+
+// Client API for ASTService service
+
+type ASTService interface {
+	GenerateAST(ctx context.Context, in *VariantCodeFile, opts ...client.CallOption) (*Response, error)
+}
+
+type aSTService struct {
+	c    client.Client
+	name string
+}
+
+func NewASTService(name string, c client.Client) ASTService {
+	return &aSTService{
+		c:    c,
+		name: name,
+	}
+}
+
+func (c *aSTService) GenerateAST(ctx context.Context, in *VariantCodeFile, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ASTService.GenerateAST", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for ASTService service
+
+type ASTServiceHandler interface {
+	GenerateAST(context.Context, *VariantCodeFile, *Response) error
+}
+
+func RegisterASTServiceHandler(s server.Server, hdlr ASTServiceHandler, opts ...server.HandlerOption) error {
+	type aSTService interface {
+		GenerateAST(ctx context.Context, in *VariantCodeFile, out *Response) error
+	}
+	type ASTService struct {
+		aSTService
+	}
+	h := &aSTServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&ASTService{h}, opts...))
+}
+
+type aSTServiceHandler struct {
+	ASTServiceHandler
+}
+
+func (h *aSTServiceHandler) GenerateAST(ctx context.Context, in *VariantCodeFile, out *Response) error {
+	return h.ASTServiceHandler.GenerateAST(ctx, in, out)
+}
+
+// Api Endpoints for ImageService service
+
+func NewImageServiceEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
+
+// Client API for ImageService service
+
+type ImageService interface {
+	GenerateImage(ctx context.Context, in *VariantCodeFile, opts ...client.CallOption) (*Response, error)
+}
+
+type imageService struct {
+	c    client.Client
+	name string
+}
+
+func NewImageService(name string, c client.Client) ImageService {
+	return &imageService{
+		c:    c,
+		name: name,
+	}
+}
+
+func (c *imageService) GenerateImage(ctx context.Context, in *VariantCodeFile, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "ImageService.GenerateImage", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for ImageService service
+
+type ImageServiceHandler interface {
+	GenerateImage(context.Context, *VariantCodeFile, *Response) error
+}
+
+func RegisterImageServiceHandler(s server.Server, hdlr ImageServiceHandler, opts ...server.HandlerOption) error {
+	type imageService interface {
+		GenerateImage(ctx context.Context, in *VariantCodeFile, out *Response) error
+	}
+	type ImageService struct {
+		imageService
+	}
+	h := &imageServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&ImageService{h}, opts...))
+}
+
+type imageServiceHandler struct {
+	ImageServiceHandler
+}
+
+func (h *imageServiceHandler) GenerateImage(ctx context.Context, in *VariantCodeFile, out *Response) error {
+	return h.ImageServiceHandler.GenerateImage(ctx, in, out)
 }
